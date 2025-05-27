@@ -1,0 +1,20 @@
+{:tasks {:requires ([babashka.tasks :refer [shell]])
+         repl      {:override-builtin true
+                    :doc              "Run the dev REPL"
+                    :task             (shell "clojure -M:repl/cider:dev")}
+         fmt       (shell "cljfmt check")
+         fmt:fix   (shell "cljfmt fix .")
+         lint      (shell (str "clj-kondo" " --fail-level error"
+                               (if (seq *command-line-args*)
+                                 (str " --lint " (first *command-line-args*))
+                                 " --lint src --lint test")))
+         clean     {:override-builtin true
+                    :doc              "Clean build artifacts"
+                    :task             (shell "clojure -T:build clean")}
+         uberjar   {:override-builtin true
+                    :doc              "Build an uberjar"
+                    :task             (shell "clojure -T:build uber")}
+         test      {:doc  "Run JVM Clojure tests with kaocha"
+                    :task (do (apply clojure {:extra-env {"TEST_SCI" "true"}}
+                                     "-M:kaocha" *command-line-args*)
+                              (clojure "-M -e \"(set! *warn-on-reflection* true) (require '[ol.client-ip.parse-ip] :reload) (require '[ol.client-ip.ip] :reload) (require '[ol.client-ip.protocols] :reload) (require '[ol.client-ip.strategy] :reload)\""))}}}

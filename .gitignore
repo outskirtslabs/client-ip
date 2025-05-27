@@ -1,0 +1,16 @@
+.cpcache/
+**/.claude/settings.local.json
+elixir/
+.clj-kondo/
+
+.lsp/
+.nrepl-port
+COST.md
+*.java
+PLAN.md
+TASK.md
+archive/
+realclientip-go/
+rfc7239.txt
+src/user.clj
+telemere/
