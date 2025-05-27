@@ -3,6 +3,26 @@
 This guide explains when and why to use each strategy. The choice of strategy is
 critical - **using the wrong strategy can lead to ip spoofing vulnerabilities**.
 
+<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
+**Table of Contents**
+
+- [Usage Guide](#usage-guide)
+  - [Understanding Your Network Setup](#understanding-your-network-setup)
+  - [Terminology](#terminology)
+  - [Strategy Reference](#strategy-reference)
+    - [Remote Address Strategy / No middleware at all!](#remote-address-strategy--no-middleware-at-all)
+    - [Single IP Header Strategy](#single-ip-header-strategy)
+    - [Rightmost Non-Private Strategy](#rightmost-non-private-strategy)
+    - [Rightmost Trusted Count Strategy](#rightmost-trusted-count-strategy)
+    - [Rightmost Trusted Range Strategy](#rightmost-trusted-range-strategy)
+    - [Chain Strategy](#chain-strategy)
+    - [Leftmost Non-Private Strategy](#leftmost-non-private-strategy)
+  - [Testing Your Configuration](#testing-your-configuration)
+  - [Common Pitfalls](#common-pitfalls)
+
+<!-- markdown-toc end -->
+
+
 ## Understanding Your Network Setup
 
 Before choosing a strategy, you need to understand your production environment's network topology:
