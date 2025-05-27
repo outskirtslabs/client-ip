@@ -1,4 +1,10 @@
-{:paths ["src"]
- :deps  {org.clojure/clojure  {:mvn/version "1.12.0"}}
+{:paths   ["src"]
+ :deps    {org.clojure/clojure {:mvn/version "1.12.0"}}
  :aliases {:kaocha {:extra-deps {lambdaisland/kaocha {:mvn/version "1.91.1392"}}
-                    :main-opts ["-m" "kaocha.runner"]}}}
+                    :main-opts  ["-m" "kaocha.runner"]}
+           :build  {:deps       {io.github.clojure/tools.build {:git/tag "v0.10.9"
+                                                                :git/sha "e405aac"}
+                                 slipset/deps-deploy           {:mvn/version "0.2.2"}}
+                    :ns-default build}
+           :neil   {:project {:name com.outskirtslabs/client-ip
+                              :version "0.1.0"}}}}

@@ -11,10 +11,16 @@
          clean     {:override-builtin true
                     :doc              "Clean build artifacts"
                     :task             (shell "clojure -T:build clean")}
-         uberjar   {:override-builtin true
-                    :doc              "Build an uberjar"
-                    :task             (shell "clojure -T:build uber")}
+         jar       {:override-builtin true
+                    :depends          [clean]
+                    :doc              "Build an jar"
+                    :task             (shell "clojure -T:build jar")}
          test      {:doc  "Run JVM Clojure tests with kaocha"
                     :task (do (apply clojure {:extra-env {"TEST_SCI" "true"}}
                                      "-M:kaocha" *command-line-args*)
-                              (clojure "-M -e \"(set! *warn-on-reflection* true) (require '[ol.client-ip.parse-ip] :reload) (require '[ol.client-ip.ip] :reload) (require '[ol.client-ip.protocols] :reload) (require '[ol.client-ip.strategy] :reload)\""))}}}
+                              (clojure "-M -e \"(set! *warn-on-reflection* true) (require '[ol.client-ip.parse-ip] :reload) (require '[ol.client-ip.ip] :reload) (require '[ol.client-ip.protocols] :reload) (require '[ol.client-ip.strategy] :reload)\""))}
+
+         publish {:doc     "Publish the clojure sdk libs to clojars"
+                  :depends [jar]
+                  :task    (doseq [dir sdk-lib-dirs]
+                             (clojure {:dir dir} "-T:build deploy"))}}}
