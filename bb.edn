@@ -25,6 +25,5 @@
                                      :task             (shell "clojure -T:build clean")}
                   publish           {:doc     "Publish the clojure sdk libs to clojars"
                                      :depends [jar]
-                                     :task    (doseq [dir sdk-lib-dirs]
-                                                (clojure {:dir dir} "-T:build deploy"))}
+                                     :task    (clojure "-T:build deploy")}
                   ci                {:depends [test fmt.check lint]}}}

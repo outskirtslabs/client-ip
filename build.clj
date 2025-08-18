@@ -27,7 +27,7 @@
 (defn url->scm [url-string]
   (let [[_ domain repo-path] (re-find #"https?://?([\w\-\.]+)/(.+)" url-string)]
     [:scm
-     [:url (str "https://" domain "/")]
+     [:url (str "https://" domain "/" repo-path)]
      [:connection (str "scm:git:https://" domain "/" repo-path)]
      [:developerConnection (str "scm:git:ssh:git@" domain ":" repo-path)]]))
 
@@ -46,7 +46,7 @@
                             [:license
                              [:name license-id]
                              [:url (permalink license-file)]]]
-                           (conj (url->scm repo-url-prefix) [:tag (str "v" version)])]})
+                           (conj (url->scm repo-url-prefix) [:tag rev])]})
 
   (b/copy-dir {:src-dirs ["src" "resources"]
                :target-dir class-dir})

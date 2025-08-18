@@ -6,6 +6,12 @@ This project uses [**Break Versioning**](https://www.taoensso.com/break-versioni
 
 ## [UNRELEASED]
 
+## `v0.1.1` (2025-08-18)
+
+Sorry, this is my first from-scratch clojars release, and I'm struggling to get the metadata working.
+
+There are no changes.
+
 ## `v0.1.0` (2025-08-18)
 
 This is the first public release of this codebase under the `ol.client-ip` moniker.
