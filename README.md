@@ -24,10 +24,10 @@ Note that there is no dependency on ring, the public api could also be used for 
 
 ```clojure
 ;; deps.edn
-{:deps {com.outskirtslabs/client-ip {:mvn/version "0.1.0"}}}
+{:deps {com.outskirtslabs/client-ip {:mvn/version "0.1.1"}}}
 
 ;; Leiningen
-[com.outskirtslabs/client-ip "0.1.0"]
+[com.outskirtslabs/client-ip "0.1.1"]
 ```
 
 ## Quick Start
