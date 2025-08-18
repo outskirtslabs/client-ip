@@ -82,8 +82,14 @@ Below are some of those good articles:
 * [The perils of the “real” client IP](https://adam-p.ca/blog/2022/03/x-forwarded-for/) ([archive link](https://web.archive.org/web/20250416042714/https://adam-p.ca/blog/2022/03/x-forwarded-for/))
 * [Rails IP Spoofing Vulnerabilities and Protection](https://www.gingerlime.com/2012/rails-ip-spoofing-vulnerabilities-and-protection/)  ([archive link](https://web.archive.org/web/20250421121810/https://www.gingerlime.com/2012/rails-ip-spoofing-vulnerabilities-and-protection/))
 
+## Security
+
+See [here][sec] for security advisories or to report a security vulnerability.
+
 ## License
 
 Copyright © 2025 Casey Link <casey@outskirtslabs.com>
 
 Distributed under the [MIT License](./LICENSE)
+
+[sec]: https://github.com/outskirtslabs/client-ip/security/advisories
