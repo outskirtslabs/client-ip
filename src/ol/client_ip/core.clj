@@ -1,3 +1,5 @@
+;; Copyright © 2025 Casey Link <casey@outskirtslabs.com>
+;; SPDX-License-Identifier: MIT
 (ns ol.client-ip.core
   "Core implementation of the client-ip library for extracting client IPs from forwarding headers.
 

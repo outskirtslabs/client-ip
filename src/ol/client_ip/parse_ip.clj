@@ -1,3 +1,5 @@
+;; Copyright © 2025 Casey Link <casey@outskirtslabs.com>
+;; SPDX-License-Identifier: MIT
 (ns ol.client-ip.parse-ip
   "Parse a string representation of an IPv4 or IPv6 address into an InetAddress instance.
 

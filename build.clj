@@ -1,3 +1,5 @@
+;; Copyright © 2025 Casey Link <casey@outskirtslabs.com>
+;; SPDX-License-Identifier: MIT
 (ns build
   (:require [clojure.tools.build.api :as b]
             [clojure.edn :as edn]))
@@ -41,4 +43,3 @@
            :pom-file  (b/pom-path {:lib lib :class-dir class-dir})}
           opts))
   opts)
-

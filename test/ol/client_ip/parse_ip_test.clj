@@ -1,3 +1,5 @@
+;; Copyright © 2025 Casey Link <casey@outskirtslabs.com>
+;; SPDX-License-Identifier: MIT
 (ns ol.client-ip.parse-ip-test
   (:require [ol.client-ip.parse-ip :as sut :refer [from-string]]
             [clojure.test :refer [deftest are is testing]])

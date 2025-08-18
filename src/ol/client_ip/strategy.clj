@@ -1,3 +1,5 @@
+;; Copyright © 2025 Casey Link <casey@outskirtslabs.com>
+;; SPDX-License-Identifier: MIT
 (ns ol.client-ip.strategy
   "Strategy implementations for determining client IP addresses.
 

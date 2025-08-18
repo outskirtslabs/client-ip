@@ -1,3 +1,5 @@
+;; Copyright © 2025 Casey Link <casey@outskirtslabs.com>
+;; SPDX-License-Identifier: MIT
 (ns ol.client-ip.cidr-test
   (:require [ol.client-ip.cidr :as sut]
             [clojure.test :refer [deftest testing are]]))

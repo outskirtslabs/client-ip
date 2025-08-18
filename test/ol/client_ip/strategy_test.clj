@@ -1,3 +1,5 @@
+;; Copyright © 2025 Casey Link <casey@outskirtslabs.com>
+;; SPDX-License-Identifier: MIT
 (ns ol.client-ip.strategy-test
   (:require [clojure.test :refer [deftest is testing are]]
             [ol.client-ip.strategy :as strategy]

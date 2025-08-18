@@ -1,3 +1,5 @@
+;; Copyright © 2025 Casey Link <casey@outskirtslabs.com>
+;; SPDX-License-Identifier: MIT
 (ns ol.client-ip.ip-test
   (:require [ol.client-ip.ip :as sut :refer [format-ip ipv4? ipv6? ->numeric numeric->]]
             [ol.client-ip.parse-ip :as parse-ip]
