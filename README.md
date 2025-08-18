@@ -2,6 +2,10 @@
 
 > A 0-dependency ring middleware for determining a request's real client IP address from HTTP headers
 
+[![Build Status](https://github.com/outskirtslabs/client-ip/actions/workflows/ci.yml/badge.svg)](https://github.com/outskirtslabs/client-ip/actions)
+[![cljdoc badge](https://cljdoc.org/badge/com.outskirtslabs/client-ip)](https://cljdoc.org/d/com.outskirtslabs/client-ip)
+[![Clojars Project](https://img.shields.io/clojars/v/com.outskirtslabs/client-ip.svg)](https://clojars.org/com.outskirtslabs/client-ip)
+
 `X-Forwarded-For` and other client IP headers are [often used
 incorrectly](https://adam-p.ca/blog/2022/03/x-forwarded-for/), resulting in bugs
 and security vulnerabilities. This library provides strategies for extracting
@@ -19,8 +23,6 @@ Quicky feature list:
 Note that there is no dependency on ring, the public api could also be used for pedestal or sieppari-style interceptors.
 
 ## Installation
-
-[![Clojars Project](https://img.shields.io/clojars/v/com.outskirtslabs/client-ip.svg)](https://clojars.org/com.outskirtslabs/client-ip)
 
 ```clojure
 ;; deps.edn
