@@ -9,7 +9,7 @@
                   deps-tree         (clojure "-X:deps tree :aliases '[:dev]'")
                   dev               {:doc "Start a local development server" :task (clojure "-M:dev:repl/dev")}
                   fmt               (shell "cljfmt -v fix src test")
-                  fmt.check         (shell "cljfmt -v check dev src test")
+                  fmt.check         (shell "cljfmt -v check src test")
                   lint.copy-configs (let [cp (-> (shell {:out :string} "clojure -Spath -M:test:dev") :out str/trim)]
                                       (shell (str "clj-kondo --lint " cp " --dependencies --copy-configs --skip-lint")))
                   lint              (shell (str "clj-kondo" " --fail-level error"

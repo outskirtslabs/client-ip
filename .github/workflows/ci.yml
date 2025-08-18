@@ -16,37 +16,18 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # tag: v4.22
-
-      - name: Setup java 21 as default java
-        run: |
-          echo "JAVA_HOME=$JAVA_HOME_21_X64" >> $GITHUB_ENV
-          echo "$JAVA_HOME_21_X64/bin" >> $GITHUB_PATH
-        shell: bash
-
-      - name: Install clojure + tools
-        uses: DeLaGuardo/setup-clojure@ada62bb3282a01a296659d48378b812b8e097360 # tag 13.2
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@main
         with:
-          cli: latest
-          bb: latest
-
-      - name: Cache clojure dependencies
-        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # tag: v4.2.3
-        with:
-          path: |
-            ~/.m2/repository
-            ~/.gitlibs
-            ~/.deps.clj
-          key: cljdeps-${{ hashFiles('**/deps.edn') }}
-          restore-keys: cljdeps-
-
-      - name: Run test suite
-        run: bb ci
-
+          determinate: true
+      - uses: DeterminateSystems/flakehub-cache-action@main
+      - uses: DeterminateSystems/flake-checker-action@main
+      - name: Run flake check
+        run: nix flake check
+      - name: Verify
+        run: nix develop --command -- bb ci
       - name: Build jar artifacts
-        run: bb jar
-
+        run: nix develop --command -- bb jar
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # tag: v4.6.2
         with:
           name: client-ip.jar
@@ -56,4 +37,4 @@ jobs:
 
       - name: Publish artifacts to clojars
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.publish == 'true'
-        run: bb publish
+        run: nix develop --command -- bb publish
