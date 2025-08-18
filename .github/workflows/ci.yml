@@ -42,7 +42,7 @@ jobs:
           restore-keys: cljdeps-
 
       - name: Run test suite
-        run: bb test
+        run: bb ci
 
       - name: Build jar artifacts
         run: bb jar

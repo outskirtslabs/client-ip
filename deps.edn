@@ -6,5 +6,7 @@
                                                                 :git/sha "e405aac"}
                                  slipset/deps-deploy           {:mvn/version "0.2.2"}}
                     :ns-default build}
-           :neil   {:project {:name com.outskirtslabs/client-ip
-                              :version "0.1.0"}}}}
+           :neil   {:project {:name        com.outskirtslabs/client-ip
+                              :license     {:id "MIT"}
+                              :description "A 0-dependency ring middleware for determining a request's real client IP address from HTTP headers"
+                              :version     "0.1.0"}}}}
