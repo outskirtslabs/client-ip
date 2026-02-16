@@ -1,0 +1,309 @@
+= ol.client-ip.ip
+
+IP address utilities for conversion and classification.
+
+This namespace provides functions for working with IP addresses,
+particularly for converting between string, InetAddress, and numeric
+representations. It follows RFC 5952 for IPv6 address formatting and
+provides utilities for type checking and serialization.
+
+NOTE: None of the functions in this namespace accept ip addreses input as strings.
+Use xref:api/ol-client-ip-parse-ip.adoc#from-string[`ol.client-ip.parse-ip/from-string`] to convert strings to InetAddress objects.
+
+The key operations available are:
+
+* Type checking with `ipv4?` and `ipv6?`
+* String formatting with `format-ip`
+* Numeric conversion with `->numeric` and `numeric->`
+
+These functions are designed to work with the `java.net.InetAddress`
+class hierarchy and its subclasses `Inet4Address` and `Inet6Address`.
+
+Refer to xref:api/ol-client-ip-parse-ip.adoc[`ol.client-ip.parse-ip`] and xref:api/ol-client-ip-cidr.adoc[`ol.client-ip.cidr`] for more useful functions.
+
+
+[#ipv4-QMARK-]
+== ipv4?
+
+[source,clojure]
+----
+(ipv4? ip)
+----
+
+Checks if an IP address is an IPv4 address.
+
+This function determines if the given IP address is an instance of
+`java.net.Inet4Address`.
+
+Arguments:
+  ip - An IP address object (InetAddress)
+
+Returns:
+  `true` if the IP address is IPv4, `false` otherwise
+
+Examples:
+[source,clojure]
+----
+(ipv4? (parse-ip/from-string "192.168.1.1")) ;; => true
+(ipv4? (parse-ip/from-string "::1"))         ;; => false
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/client-ip/blob/v0.1.x/src/ol/client_ip/ip.clj#L28-L46[source,window=_blank]
+
+'''
+
+[#ipv6-QMARK-]
+== ipv6?
+
+[source,clojure]
+----
+(ipv6? ip)
+----
+
+Checks if an IP address is an IPv6 address.
+
+This function determines if the given IP address is an instance of
+`java.net.Inet6Address`.
+
+Arguments:
+  ip - An IP address object (InetAddress)
+
+Returns:
+  `true` if the IP address is IPv6, `false` otherwise
+
+Examples:
+[source,clojure]
+----
+(ipv6? (parse-ip/from-string "2001:db8::1")) ;; => true
+(ipv6? (parse-ip/from-string "192.168.1.1")) ;; => false
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/client-ip/blob/v0.1.x/src/ol/client_ip/ip.clj#L48-L66[source,window=_blank]
+
+'''
+
+[#format-ipv6]
+== format-ipv6
+
+[source,clojure]
+----
+(format-ipv6 ip)
+----
+
+Converts an IPv6 address to its canonical string representation.
+
+This function formats IPv6 addresses according to RFC 5952, which includes:
+- Using lowercase hexadecimal digits
+- Compressing the longest run of consecutive zero fields with ::
+- Not using :: to compress a single zero field
+- Including scope IDs with % delimiter for link-local addresses
+
+Arguments:
+  ip - An IPv6 address object (Inet6Address)
+
+Returns:
+  A string representation of the IPv6 address formatted according to RFC 5952
+  
+Examples:
+[source,clojure]
+----
+(format-ipv6 (parse-ip/from-string "2001:db8:0:0:0:0:0:1"))
+;; => "2001:db8::1"
+
+(format-ipv6 (parse-ip/from-string "fe80::1%eth0"))
+;; => "fe80::1%eth0"
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/client-ip/blob/v0.1.x/src/ol/client_ip/ip.clj#L121-L152[source,window=_blank]
+
+'''
+
+[#format-ip]
+== format-ip
+
+[source,clojure]
+----
+(format-ip ip)
+----
+
+Converts an IP address to its canonical string representation.
+
+This function formats IP addresses according to standard conventions:
+- IPv4 addresses use dotted decimal notation (e.g., "192.168.0.1")
+- IPv6 addresses follow RFC 5952 with compressed notation using ::
+  for the longest run of zeros, and embedded IPv4 addresses where appropriate
+
+The implementation handles scope IDs for IPv6 link-local addresses
+and properly compresses IPv6 addresses according to the standard rules.
+
+Arguments:
+  ip - An IP address object (InetAddress)
+
+Returns:
+  A string representation of the IP address
+  
+Throws:
+  IllegalArgumentException - if the input is not a valid InetAddress
+
+Examples:
+[source,clojure]
+----
+(format-ip (parse-ip/from-string "192.168.1.1"))   ;; => "192.168.1.1"
+(format-ip (parse-ip/from-string "2001:db8::1"))   ;; => "2001:db8::1"
+(format-ip (parse-ip/from-string "::ffff:1.2.3.4")) ;; => "::ffff:1.2.3.4"
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/client-ip/blob/v0.1.x/src/ol/client_ip/ip.clj#L154-L185[source,window=_blank]
+
+'''
+
+[#--GT-numeric]
+== ->numeric
+
+[source,clojure]
+----
+(->numeric ip)
+----
+
+Converts an IP address to its numeric representation as a BigInteger.
+
+This function takes an InetAddress (either IPv4 or IPv6) and returns
+a BigInteger representing the address. The BigInteger can be used for
+IP address arithmetic, comparison, or storage.
+
+Arguments:
+  ip - An IP address object (InetAddress)
+
+Returns:
+  A BigInteger representing the IP address
+  
+Examples:
+[source,clojure]
+----
+(->numeric (parse-ip/from-string "192.0.2.1"))
+;; => 3221225985
+
+(->numeric (parse-ip/from-string "2001:db8::1"))
+;; => 42540766411282592856903984951653826561
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/client-ip/blob/v0.1.x/src/ol/client_ip/ip.clj#L187-L209[source,window=_blank]
+
+'''
+
+[#numeric--GT-]
+== numeric->
+
+[source,clojure]
+----
+(numeric-> address version)
+----
+
+Converts a BigInteger to an InetAddress.
+
+This function takes a numeric representation of an IP address as a BigInteger
+and converts it back to an InetAddress object. The `ipv6?` flag determines
+whether to create an IPv4 or IPv6 address.
+
+Arguments:
+  address - A BigInteger representing the IP address
+  version - One of :v6 or :v4 indicating whether this is an IPv6 address
+            or an IPv4 address
+
+Returns:
+  An InetAddress object representing the numeric address, or nil 
+  
+Throws:
+  ExceptionInfo - If the BigInteger is negative or too large for the
+                 specified address type
+  
+Examples:
+[source,clojure]
+----
+;; Convert back to IPv4
+(numeric-> (BigInteger. "3221226113") :v4)
+;; => #object[java.net.Inet4Address 0x578d1c5 "/192.0.2.129"]
+
+;; Convert back to IPv6
+(numeric-> (BigInteger. "42540766411282592856903984951653826561") :v6)
+;; => #object[java.net.Inet6Address 0x14832c23 "/2001:db8:0:0:0:0:0:1"]
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/client-ip/blob/v0.1.x/src/ol/client_ip/ip.clj#L211-L267[source,window=_blank]
+
+'''
+
+[#numeric-v6--GT-]
+== numeric-v6->
+
+[source,clojure]
+----
+(numeric-v6-> address)
+----
+
+Converts a BigInteger to an IPv6 address.
+
+This is a convenience wrapper around `numeric->` that automatically
+sets the `ipv6?` flag to true.
+
+Arguments:
+  address - A BigInteger representing the IPv6 address
+
+Returns:
+  An Inet6Address object or nil if the input is invalid
+  
+See also: <<numeric--GT-,`numeric->`>>
+
+Examples:
+[source,clojure]
+----
+(numeric-v6-> (BigInteger. "42540766411282592856903984951653826561"))
+;; => #object[java.net.Inet6Address 0x42668812 "/2001:db8:0:0:0:0:0:1"]
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/client-ip/blob/v0.1.x/src/ol/client_ip/ip.clj#L269-L292[source,window=_blank]
+
+'''
+
+[#numeric-v4--GT-]
+== numeric-v4->
+
+[source,clojure]
+----
+(numeric-v4-> address)
+----
+
+Converts a BigInteger to an IPv4 address.
+
+Arguments:
+  address - A BigInteger representing the IPv4 address
+
+Returns:
+  An Inet4Address object or nil if the input is invalid
+  
+See also: <<numeric--GT-,`numeric->`>>
+
+Examples:
+[source,clojure]
+----
+(numeric-v4-> (BigInteger. "3221226113"))
+;; => #object[java.net.Inet4Address 0x6b88aeff "/192.0.2.129"]
+----
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/client-ip/blob/v0.1.x/src/ol/client_ip/ip.clj#L294-L314[source,window=_blank]

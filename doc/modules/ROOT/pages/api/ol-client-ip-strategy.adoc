@@ -1,0 +1,330 @@
+= ol.client-ip.strategy
+
+Strategy implementations for determining client IP addresses.
+
+This namespace provides various strategy implementations for extracting the
+real client IP from HTTP headers and connection information.
+
+Each strategy is designed for specific network configurations:
+
+* `RemoteAddrStrategy` - Direct connections (no reverse proxy)
+* `SingleIPHeaderStrategy` - Single trusted reverse proxy with single IP headers
+* `RightmostNonPrivateStrategy` - Multiple proxies, all with private IPs
+* `LeftmostNonPrivateStrategy` - Get IP closest to original client (not secure)
+* `RightmostTrustedCountStrategy` - Fixed number of trusted proxies
+* `RightmostTrustedRangeStrategy` - Known trusted proxy IP ranges
+* `ChainStrategy` - Try multiple strategies in order
+
+Strategies are created once and reused across requests. They are thread-safe
+and designed to fail fast on configuration errors while being resilient to
+malformed input during request processing.
+
+[#parse-forwarded]
+== parse-forwarded
+
+[source,clojure]
+----
+(parse-forwarded header-value)
+----
+
+Parse a Forwarded header value according to RFC 7239.
+ Returns a sequence of InetAddress objects, or an empty sequence if none are valid.
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/client-ip/blob/v0.1.x/src/ol/client_ip/strategy.clj#L119-L130[source,window=_blank]
+
+'''
+
+[#split-host-zone]
+== split-host-zone
+
+[source,clojure]
+----
+(split-host-zone ip-string)
+----
+
+Split IPv6 zone from IP address. 
+
+IPv6 addresses can include zone identifiers (scope IDs) separated by '%'.
+For example: 'fe80::1%eth0' or 'fe80::1%1'
+
+Args:
+  ip-string: String IP address that may contain a zone identifier
+  
+Returns:
+  Vector of [ip zone] where zone is the zone identifier string, 
+  or [ip nil] if no zone is present.
+  
+Examples:
+  (split-host-zone "192.168.1.1") => ["192.168.1.1" nil]
+  (split-host-zone "fe80::1%eth0") => ["fe80::1" "eth0"]
+  (split-host-zone "fe80::1%1") => ["fe80::1" "1"]
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/client-ip/blob/v0.1.x/src/ol/client_ip/strategy.clj#L150-L171[source,window=_blank]
+
+'''
+
+[#remote-addr-strategy]
+== remote-addr-strategy
+
+[source,clojure]
+----
+(remote-addr-strategy)
+----
+
+Create a strategy that uses the direct client socket IP.
+
+This strategy extracts the IP address from the request's :remote-addr field,
+which represents the direct client socket connection. Use this when your
+server accepts direct connections from clients (not behind a reverse proxy).
+
+The strategy strips any port information and validates the IP is not
+zero/unspecified (0.0.0.0 or ::).
+
+Returns:
+  RemoteAddrStrategy instance
+  
+Example:
+  (remote-addr-strategy)
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/client-ip/blob/v0.1.x/src/ol/client_ip/strategy.clj#L184-L200[source,window=_blank]
+
+'''
+
+[#single-ip-header-strategy]
+== single-ip-header-strategy
+
+[source,clojure]
+----
+(single-ip-header-strategy header-name)
+----
+
+Create a strategy that extracts IP from headers containing a single IP address.
+
+This strategy is designed for headers like X-Real-IP, CF-Connecting-IP,
+True-Client-IP, etc. that contain only one IP address. Use this when you
+have a single trusted reverse proxy that sets a reliable single-IP header.
+
+The strategy validates that the header name is not X-Forwarded-For or
+Forwarded, as these headers can contain multiple IPs and should use
+different strategies.
+
+Args:
+  header-name: String name of the header to check (case-insensitive)
+  
+Returns:
+  SingleIPHeaderStrategy instance
+  
+Throws:
+  ExceptionInfo if header-name is invalid or refers to multi-IP headers
+  
+Examples:
+  (single-ip-header-strategy "x-real-ip")
+  (single-ip-header-strategy "cf-connecting-ip")
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/client-ip/blob/v0.1.x/src/ol/client_ip/strategy.clj#L208-L235[source,window=_blank]
+
+'''
+
+[#rightmost-non-private-strategy]
+== rightmost-non-private-strategy
+
+[source,clojure]
+----
+(rightmost-non-private-strategy header-name)
+----
+
+Create a strategy that gets the rightmost non-private IP from forwarding headers.
+
+This strategy processes IPs in reverse order (rightmost first) and returns
+the first IP that is not in a private/reserved range. Use this when all
+your reverse proxies have private IP addresses, so the rightmost non-private
+IP should be the real client IP.
+
+The strategy supports X-Forwarded-For and Forwarded headers that contain
+comma-separated IP lists.
+
+Args:
+  header-name: String name of the header to check (case-insensitive)
+              Should be "x-forwarded-for" or "forwarded"
+  
+Returns:
+  RightmostNonPrivateStrategy instance
+  
+Throws:
+  ExceptionInfo if header-name is invalid or refers to single-IP headers
+  
+Examples:
+  (rightmost-non-private-strategy "x-forwarded-for")
+  (rightmost-non-private-strategy "forwarded")
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/client-ip/blob/v0.1.x/src/ol/client_ip/strategy.clj#L250-L278[source,window=_blank]
+
+'''
+
+[#leftmost-non-private-strategy]
+== leftmost-non-private-strategy
+
+[source,clojure]
+----
+(leftmost-non-private-strategy header-name)
+----
+
+Create a strategy that gets the leftmost non-private IP from forwarding headers.
+
+This strategy processes IPs in forward order (leftmost first) and returns
+the first IP that is not in a private/reserved range. This gets the IP
+closest to the original client.
+
+⚠️  **WARNING: NOT FOR SECURITY USE** ⚠️
+This strategy is easily spoofable since clients can add arbitrary IPs to
+the beginning of forwarding headers. Use only when security is not a concern
+and you want the IP closest to the original client.
+
+The strategy supports X-Forwarded-For and Forwarded headers that contain
+comma-separated IP lists.
+
+Args:
+  header-name: String name of the header to check (case-insensitive)
+              Should be "x-forwarded-for" or "forwarded"
+  
+Returns:
+  LeftmostNonPrivateStrategy instance
+  
+Throws:
+  ExceptionInfo if header-name is invalid or refers to single-IP headers
+  
+Examples:
+  (leftmost-non-private-strategy "x-forwarded-for")
+  (leftmost-non-private-strategy "forwarded")
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/client-ip/blob/v0.1.x/src/ol/client_ip/strategy.clj#L293-L325[source,window=_blank]
+
+'''
+
+[#rightmost-trusted-count-strategy]
+== rightmost-trusted-count-strategy
+
+[source,clojure]
+----
+(rightmost-trusted-count-strategy header-name trusted-count)
+----
+
+Create a strategy that returns IP at specific position based on known proxy count.
+
+This strategy is for when you have a fixed number of trusted proxies and want
+to get the IP at the specific position that represents the original client.
+Given N trusted proxies, the client IP should be at position -(N+1) from the end.
+
+For example, with 2 trusted proxies and header 'client, proxy1, proxy2, proxy3':
+- Total IPs: 4
+- Skip last 2 (trusted): positions 2,3 
+- Return IP at position 1 (proxy1)
+
+Args:
+  header-name: String name of the header to check (case-insensitive)
+              Should be "x-forwarded-for" or "forwarded"
+  trusted-count: Number of trusted proxies (must be > 0)
+  
+Returns:
+  RightmostTrustedCountStrategy instance
+  
+Throws:
+  ExceptionInfo if header-name is invalid or trusted-count <= 0
+  
+Examples:
+  (rightmost-trusted-count-strategy "x-forwarded-for" 1)
+  (rightmost-trusted-count-strategy "forwarded" 2)
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/client-ip/blob/v0.1.x/src/ol/client_ip/strategy.clj#L338-L371[source,window=_blank]
+
+'''
+
+[#rightmost-trusted-range-strategy]
+== rightmost-trusted-range-strategy
+
+[source,clojure]
+----
+(rightmost-trusted-range-strategy header-name trusted-ranges)
+----
+
+Create a strategy that returns rightmost IP not in trusted ranges.
+
+This strategy processes IPs in reverse order (rightmost first) and returns
+the first IP that is not within any of the specified trusted IP ranges.
+Use this when you know the specific IP ranges of your trusted proxies.
+
+The strategy supports X-Forwarded-For and Forwarded headers that contain
+comma-separated IP lists.
+
+Args:
+  header-name: String name of the header to check (case-insensitive)
+              Should be "x-forwarded-for" or "forwarded"
+  trusted-ranges: Collection of CIDR ranges (strings) that represent trusted proxies
+                 Each range should be a valid CIDR notation like "192.168.1.0/24"
+  
+Returns:
+  RightmostTrustedRangeStrategy instance
+  
+Throws:
+  ExceptionInfo if header-name is invalid or trusted-ranges is empty/invalid
+  
+Examples:
+  (rightmost-trusted-range-strategy "x-forwarded-for" ["10.0.0.0/8" "192.168.0.0/16"])
+  (rightmost-trusted-range-strategy "forwarded" ["172.16.0.0/12"])
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/client-ip/blob/v0.1.x/src/ol/client_ip/strategy.clj#L386-L424[source,window=_blank]
+
+'''
+
+[#chain-strategy]
+== chain-strategy
+
+[source,clojure]
+----
+(chain-strategy strategies)
+----
+
+Create a strategy that tries multiple strategies in order until one succeeds.
+
+This strategy allows fallback scenarios where you want to try different
+IP detection methods in priority order. Each strategy is tried in sequence
+until one returns a non-empty result.
+
+Common use case: Try a single-IP header first, then fall back to remote address.
+
+Args:
+  strategies: Vector of strategy instances to try in order
+             Must contain at least one strategy
+  
+Returns:
+  ChainStrategy instance
+  
+Throws:
+  ExceptionInfo if strategies is empty or contains invalid strategies
+  
+Examples:
+  (chain-strategy [(single-ip-header-strategy "x-real-ip")
+                   (remote-addr-strategy)])
+  (chain-strategy [(rightmost-non-private-strategy "x-forwarded-for")
+                   (single-ip-header-strategy "x-real-ip")
+                   (remote-addr-strategy)])
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/client-ip/blob/v0.1.x/src/ol/client_ip/strategy.clj#L435-L470[source,window=_blank]

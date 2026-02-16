@@ -1,0 +1,4 @@
+* xref:index.adoc[Home]
+* xref:usage.adoc[Usage Guide]
+
+include::partial$api-nav.adoc[]
