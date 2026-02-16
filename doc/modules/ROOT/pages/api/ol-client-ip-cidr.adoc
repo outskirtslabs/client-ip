@@ -1,0 +1,67 @@
+= ol.client-ip.cidr
+
+[#cidr-parts]
+== cidr-parts
+
+[source,clojure]
+----
+(cidr-parts cidr)
+----
+
+Parse an ip network string into its prefix and signifcant bits
+
+`cidr` must be given in CIDR notation, as defined in [RFC 4632 section 3.1](https://tools.ietf.org/html/rfc4632#section-3.1)
+
+Returns a vector of [^InetAddress prefix ^Integer bits]
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/client-ip/blob/main/src/ol/client_ip/cidr.clj#L26-L39[source,window=_blank]
+
+'''
+
+[#contains-QMARK-]
+== contains?
+
+[source,clojure]
+----
+(contains? cidr ip)
+(contains? cidr-ip cidr-mask ip)
+----
+
+Check if the given CIDR contains the given IP address.
+ 
+ Arguments:
+   cidr - CIDR notation string (e.g. "192.168.0.0/24" or "2001:db8::/32")
+   ip   - IP address to check (can be InetAddress or string)
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/client-ip/blob/main/src/ol/client_ip/cidr.clj#L41-L61[source,window=_blank]
+
+'''
+
+[#reserved-ranges]
+== reserved-ranges
+
+
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/client-ip/blob/main/src/ol/client_ip/cidr.clj#L66-L93[source,window=_blank]
+
+'''
+
+[#reserved-QMARK-]
+== reserved?
+
+[source,clojure]
+----
+(reserved? ip)
+----
+
+Check if an IP is in a reserved range (loopback or private network).
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/client-ip/blob/main/src/ol/client_ip/cidr.clj#L95-L98[source,window=_blank]

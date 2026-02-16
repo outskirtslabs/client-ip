@@ -1,0 +1,99 @@
+= client-ip
+
+A 0-dependency ring middleware for determining a request's real client IP address from HTTP headers
+
+image:https://github.com/outskirtslabs/client-ip/actions/workflows/ci.yml/badge.svg[Build Status,link=https://github.com/outskirtslabs/client-ip/actions]
+image:https://cljdoc.org/badge/com.outskirtslabs/client-ip[cljdoc,link=https://cljdoc.org/d/com.outskirtslabs/client-ip]
+image:https://img.shields.io/clojars/v/com.outskirtslabs/client-ip.svg[Clojars Project,link=https://clojars.org/com.outskirtslabs/client-ip]
+
+`X-Forwarded-For` and other client IP headers are https://adam-p.ca/blog/2022/03/x-forwarded-for/[often used incorrectly], resulting in bugs and security vulnerabilities. This library provides strategies for extracting the correct client IP based on your network configuration.
+
+It is based on the golang reference implementation https://github.com/realclientip/realclientip-go[realclientip/realclientip-go].
+
+Quick feature list:
+
+* ring middleware determining the client's IP address
+* 0 dependency IP address string parsing with guaranteed no trips to the hosts' DNS services, which can block and timeout (unlike Java's `InetAddress/getByName`)
+* rightmost-ish strategies support the `X-Forwarded-For` and `Forwarded` (RFC 7239) headers
+* IPv6 zone identifiers support
+
+Note that there is no dependency on ring, the public API could also be used for pedestal or sieppari-style interceptors.
+
+== Installation
+
+[source,clojure]
+----
+;; deps.edn
+{:deps {com.outskirtslabs/client-ip {:mvn/version "0.1.1"}}}
+
+;; Leiningen
+[com.outskirtslabs/client-ip "0.1.1"]
+----
+
+== Quick Start
+
+[source,clojure]
+----
+(ns myapp.core
+  (:require [ol.client-ip.core :as client-ip]
+            [ol.client-ip.strategy :as strategy]))
+
+;; Simple case: behind a trusted proxy that sets X-Real-IP
+(def app
+  (-> handler
+      (client-ip/wrap-client-ip
+        {:strategy (strategy/single-ip-header-strategy "x-real-ip")})))
+
+;; The client IP is now available in the request
+(defn handler [request]
+  (let [client-ip (:ol/client-ip request)]
+    {:status 200
+     :body (str "Your IP is: " client-ip)}))
+----
+
+For detailed guidance on choosing strategies, see xref:usage.adoc[Usage Guide].
+
+Choosing the wrong strategy can result in IP address spoofing security vulnerabilities.
+
+== Recommended Reading
+
+You think it is an easy question:
+
+____
+I have an HTTP application, I just want to know the IP address of my client.
+____
+
+But who is the client?
+
+____
+The computer on the other end of the network connection?
+____
+
+But which network connection? The one connected to your HTTP application is probably a reverse proxy or load balancer.
+
+____
+Well I mean the "user's IP address"
+____
+
+It ain't so easy kid.
+
+There are many good articles on the internet that discuss the perils and pitfalls of trying to answer this deceptively simple question.
+
+You _should_ read one or two of them to get an idea of the complexity in this space. Libraries, like this one, _cannot_ hide the complexity from you, there is no abstraction nor encapsulation nor "default best practice".
+
+Below are some of those good articles:
+
+* MDN: https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/X-Forwarded-For#security_and_privacy_concerns[X-Forwarded-For: Security and privacy concerns]
+* https://adam-p.ca/blog/2022/03/x-forwarded-for/[The perils of the "real" client IP] (https://web.archive.org/web/20250416042714/https://adam-p.ca/blog/2022/03/x-forwarded-for/[archive link])
+* https://www.gingerlime.com/2012/rails-ip-spoofing-vulnerabilities-and-protection/[Rails IP Spoofing Vulnerabilities and Protection] (https://web.archive.org/web/20250421121810/https://www.gingerlime.com/2012/rails-ip-spoofing-vulnerabilities-and-protection/[archive link])
+* https://casey.link/blog/client-ip-ring-middleware/[ol.client-ip: A Clojure Library to Prevent IP Spoofing]
+
+== Security
+
+See https://github.com/outskirtslabs/client-ip/security/advisories[here] for security advisories or to report a security vulnerability.
+
+== License
+
+Copyright (C) 2025 Casey Link <casey@outskirtslabs.com>
+
+Distributed under the https://github.com/outskirtslabs/client-ip/blob/main/LICENSE[MIT License].

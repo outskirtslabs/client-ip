@@ -1,6 +1,9 @@
 
 {:min-bb-version "0.8.156"
- :deps           {}
+ :deps           {outskirtslabs/bb-tasks
+                  {:git/url "https://github.com/outskirtslabs/bb-tasks"
+                   :git/sha "103fafddb29ea04b08083742684ab1bb39d87c27"}}
+ :pods           {clj-kondo/clj-kondo {:version "2024.11.14"}}
  :paths          ["resources" "scripts"]
  :tasks          {:requires         ([babashka.fs :as fs]
                                      [clojure.string :as str]
@@ -26,4 +29,21 @@
                   publish           {:doc     "Publish the clojure sdk libs to clojars"
                                      :depends [jar]
                                      :task    (clojure "-T:build deploy")}
-                  ci                {:depends [test fmt.check lint]}}}
+                  ci                {:depends [test fmt.check lint]}
+                  sync-readme       {:doc  "Sync README.adoc as Antora index page"
+                                     :task (let [readme (slurp "README.adoc")
+                                                 index (str/replace readme
+                                                         (re-pattern "link:doc/modules/ROOT/pages/([^\\[]+)\\[")
+                                                         "xref:$1[")]
+                                             (spit "doc/modules/ROOT/pages/index.adoc" index)
+                                             (println "Synced README.adoc -> doc/modules/ROOT/pages/index.adoc"))}
+                  gen-api-docs      {:doc  "Generate AsciiDoc API reference pages"
+                                     :task (let [gen (requiring-resolve 'ol.bb-tasks.gen-api-docs/generate!)
+                                                 branch (str/trim (:out (shell {:out :string} "git rev-parse --abbrev-ref HEAD")))]
+                                             (gen {:project-root "."
+                                                   :source-paths ["src"]
+                                                   :antora-start-path "doc"
+                                                   :github-repo "https://github.com/outskirtslabs/client-ip"
+                                                   :git-branch branch}))}
+                  gen-docs          {:doc     "Generate all Antora documentation"
+                                     :depends [sync-readme gen-api-docs]}}}

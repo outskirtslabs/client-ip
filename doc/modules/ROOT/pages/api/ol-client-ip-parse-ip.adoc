@@ -1,0 +1,74 @@
+= ol.client-ip.parse-ip
+
+Parse a string representation of an IPv4 or IPv6 address into an InetAddress instance.
+
+Unlike `InetAddress/getByName`, the functions in this namespace never cause
+DNS services to be accessed. This avoids potentially blocking/side-effecting
+network calls that can occur when using the JDK's built-in methods to parse IP
+addresses.
+
+This implementation is inspired by Google Guava's InetAddresses class, which
+provides similar functionality in Java. This code focuses on strict validation
+of IP address formats according to relevant RFCs.
+
+Features:
+- Non-blocking IP address parsing with pure functions
+- Strict RFC-compliant validation
+- Support for all IPv4 formats
+- Support for all IPv6 formats (including compressed notation and embedded IPv4)
+- Support for IPv6 scope identifiers
+
+The main entry point is `parse-ip`, which takes a string and returns an
+InetAddress instance or nil if the input is an invalid ip address literal.
+
+[#bytes--GT-inet-address]
+== bytes->inet-address
+
+[source,clojure]
+----
+(bytes->inet-address addr)
+(bytes->inet-address addr scope)
+----
+
+Convert a byte array into an InetAddress.
+
+Args:
+  addr: the raw 4-byte or 16-byte IP address in big-endian order
+  scope: optional scope identifier for IPv6 addresses
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/client-ip/blob/main/src/ol/client_ip/parse_ip.clj#L231-L256[source,window=_blank]
+
+'''
+
+[#from-string]
+== from-string
+
+[source,clojure]
+----
+(from-string ip-string)
+----
+
+Returns the InetAddress having the given string representation or nil otherwise.
+
+This function parses IP address strings without performing DNS lookups, making it
+suitable for environments where DNS lookups would cause unwanted blocking or side effects.
+
+It supports:
+- IPv4 addresses in dotted decimal format (e.g., "192.168.1.1")
+- IPv6 addresses in hex format with optional compression (e.g., "2001:db8::1")
+- IPv6 addresses with scope IDs (e.g., "fe80::1%eth0" or "fe80::1%1")
+- IPv6 addresses with embedded IPv4 (e.g., "::ffff:192.168.1.1")
+
+If the input is already an InetAddress, it is returned unchanged.
+
+Args:
+  ip-string: A string representing an IP address or an InetAddress
+             
+Returns:
+  An InetAddress object, or nil if the input couldn't be parsed
+
+
+[.api-source]
+link:https://github.com/outskirtslabs/client-ip/blob/main/src/ol/client_ip/parse_ip.clj#L258-L290[source,window=_blank]
