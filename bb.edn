@@ -2,7 +2,7 @@
 {:min-bb-version "0.8.156"
  :deps           {outskirtslabs/bb-tasks
                   {:git/url "https://github.com/outskirtslabs/bb-tasks"
-                   :git/sha "ddf1c35fd993379d1a6f177c76b44f8ea5e8965c"}}
+                   :git/sha "8f38522bce745400f38456eab254977f94656651"}}
  :pods           {clj-kondo/clj-kondo {:version "2026.01.19"}}
  :paths          ["resources" "scripts"]
  :tasks          {:requires         ([babashka.fs :as fs]
@@ -32,5 +32,4 @@
                                      :task    (clojure "-T:build deploy")}
                   ci                {:depends [test fmt.check lint]}
                   gen-docs          {:doc  "Generate all Antora documentation"
-                                     :task (gen-docs/generate! {:antora-start-path "doc"
-                                                                :github-repo "https://github.com/outskirtslabs/client-ip"})}}}
+                                     :task (gen-docs/generate!)}}}
