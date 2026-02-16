@@ -2,12 +2,13 @@
 {:min-bb-version "0.8.156"
  :deps           {outskirtslabs/bb-tasks
                   {:git/url "https://github.com/outskirtslabs/bb-tasks"
-                   :git/sha "669cd579bddd4ff0a1b6328a357c2deba5e04573"}}
+                   :git/sha "ddf1c35fd993379d1a6f177c76b44f8ea5e8965c"}}
  :pods           {clj-kondo/clj-kondo {:version "2026.01.19"}}
  :paths          ["resources" "scripts"]
  :tasks          {:requires         ([babashka.fs :as fs]
                                      [clojure.string :as str]
-                                     [babashka.tasks :refer [shell]])
+                                     [babashka.tasks :refer [shell]]
+                                     [ol.bb-tasks.gen-docs :as gen-docs])
                   test              (apply clojure "-M:dev:kaocha" *command-line-args*)
                   deps-tree         (clojure "-X:deps tree :aliases '[:dev]'")
                   dev               {:doc "Start a local development server" :task (clojure "-M:dev:repl/dev")}
@@ -30,20 +31,6 @@
                                      :depends [jar]
                                      :task    (clojure "-T:build deploy")}
                   ci                {:depends [test fmt.check lint]}
-                  sync-readme       {:doc  "Sync README.adoc as Antora index page"
-                                     :task (let [readme (slurp "README.adoc")
-                                                 index (str/replace readme
-                                                         (re-pattern "link:doc/modules/ROOT/pages/([^\\[]+)\\[")
-                                                         "xref:$1[")]
-                                             (spit "doc/modules/ROOT/pages/index.adoc" index)
-                                             (println "Synced README.adoc -> doc/modules/ROOT/pages/index.adoc"))}
-                  gen-api-docs      {:doc  "Generate AsciiDoc API reference pages"
-                                     :task (let [gen (requiring-resolve 'ol.bb-tasks.gen-api-docs/generate!)
-                                                 branch (str/trim (:out (shell {:out :string} "git rev-parse --abbrev-ref HEAD")))]
-                                             (gen {:project-root "."
-                                                   :source-paths ["src"]
-                                                   :antora-start-path "doc"
-                                                   :github-repo "https://github.com/outskirtslabs/client-ip"
-                                                   :git-branch branch}))}
-                  gen-docs          {:doc     "Generate all Antora documentation"
-                                     :depends [sync-readme gen-api-docs]}}}
+                  gen-docs          {:doc  "Generate all Antora documentation"
+                                     :task (gen-docs/generate! {:antora-start-path "doc"
+                                                                :github-repo "https://github.com/outskirtslabs/client-ip"})}}}
