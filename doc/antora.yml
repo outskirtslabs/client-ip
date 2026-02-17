@@ -1,6 +1,6 @@
 ---
 name: ol.client-ip
-title: Client IP
+title: ol.client-ip
 version: next
 prerelease: true
 nav:
