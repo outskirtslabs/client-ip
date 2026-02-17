@@ -1,8 +1,8 @@
-.API Reference
-* ol.client-ip
-** xref:api/ol-client-ip-cidr.adoc[cidr]
-** xref:api/ol-client-ip-core.adoc[core]
-** xref:api/ol-client-ip-ip.adoc[ip]
-** xref:api/ol-client-ip-parse-ip.adoc[parse-ip]
-** xref:api/ol-client-ip-protocols.adoc[protocols]
-** xref:api/ol-client-ip-strategy.adoc[strategy]
+* xref:api.adoc[API Reference]
+** ol.client-ip
+*** xref:api/ol-client-ip-cidr.adoc[cidr]
+*** xref:api/ol-client-ip-core.adoc[core]
+*** xref:api/ol-client-ip-ip.adoc[ip]
+*** xref:api/ol-client-ip-parse-ip.adoc[parse-ip]
+*** xref:api/ol-client-ip-protocols.adoc[protocols]
+*** xref:api/ol-client-ip-strategy.adoc[strategy]

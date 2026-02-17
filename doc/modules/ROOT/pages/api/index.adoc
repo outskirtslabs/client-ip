@@ -1,0 +1,27 @@
+= API Reference
+
+This release publishes 6 namespaces.
+
+[cols="1,3",options="header",stripes=hover]
+|===
+| Namespace | Summary
+
+| xref:api/ol-client-ip-cidr.adoc[`ol.client-ip.cidr`]
+| -
+
+| xref:api/ol-client-ip-core.adoc[`ol.client-ip.core`]
+| Core implementation of the client-ip library for extracting client IPs from forwarding headers.
+
+| xref:api/ol-client-ip-ip.adoc[`ol.client-ip.ip`]
+| IP address utilities for conversion and classification.
+
+| xref:api/ol-client-ip-parse-ip.adoc[`ol.client-ip.parse-ip`]
+| Parse a string representation of an IPv4 or IPv6 address into an InetAddress instance.
+
+| xref:api/ol-client-ip-protocols.adoc[`ol.client-ip.protocols`]
+| -
+
+| xref:api/ol-client-ip-strategy.adoc[`ol.client-ip.strategy`]
+| Strategy implementations for determining client IP addresses.
+
+|===
