@@ -1,6 +1,6 @@
 ---
 name: ol.client-ip
-title: Client IP
+title: ol.client-ip
 version: '0.1'
 nav:
   - modules/ROOT/nav.adoc
