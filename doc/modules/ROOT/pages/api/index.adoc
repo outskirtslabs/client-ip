@@ -7,7 +7,7 @@ This release publishes 6 namespaces.
 | Namespace | Summary
 
 | xref:api/ol-client-ip-cidr.adoc[`ol.client-ip.cidr`]
-| No namespace docstring available.
+| -
 
 | xref:api/ol-client-ip-core.adoc[`ol.client-ip.core`]
 | Core implementation of the client-ip library for extracting client IPs from forwarding headers.
@@ -19,7 +19,7 @@ This release publishes 6 namespaces.
 | Parse a string representation of an IPv4 or IPv6 address into an InetAddress instance.
 
 | xref:api/ol-client-ip-protocols.adoc[`ol.client-ip.protocols`]
-| No namespace docstring available.
+| -
 
 | xref:api/ol-client-ip-strategy.adoc[`ol.client-ip.strategy`]
 | Strategy implementations for determining client IP addresses.
