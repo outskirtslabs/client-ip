@@ -1,9 +1,12 @@
 = client-ip
 
+____
 A 0-dependency ring middleware for determining a request's real client IP address from HTTP headers
+____
 
+image:https://img.shields.io/badge/doc-outskirtslabs-orange.svg[doc,link=http://docs.outskirtslabs.com/ol.client-ip/0.1/]
+image:https://img.shields.io/badge/status-stable-brightgreen.svg[status: stable,link=http://docs.outskirtslabs.com/open-source-vital-signs#stable]
 image:https://github.com/outskirtslabs/client-ip/actions/workflows/ci.yml/badge.svg[Build Status,link=https://github.com/outskirtslabs/client-ip/actions]
-image:https://cljdoc.org/badge/com.outskirtslabs/client-ip[cljdoc,link=https://cljdoc.org/d/com.outskirtslabs/client-ip]
 image:https://img.shields.io/clojars/v/com.outskirtslabs/client-ip.svg[Clojars Project,link=https://clojars.org/com.outskirtslabs/client-ip]
 
 `X-Forwarded-For` and other client IP headers are https://adam-p.ca/blog/2022/03/x-forwarded-for/[often used incorrectly], resulting in bugs and security vulnerabilities. This library provides strategies for extracting the correct client IP based on your network configuration.
@@ -18,6 +21,8 @@ Quick feature list:
 * IPv6 zone identifiers support
 
 Note that there is no dependency on ring, the public API could also be used for pedestal or sieppari-style interceptors.
+
+Project status: *https://docs.outskirtslabs.com/open-source-vital-signs#stable[Stable]*.
 
 == Installation
 
@@ -54,6 +59,12 @@ Note that there is no dependency on ring, the public API could also be used for 
 For detailed guidance on choosing strategies, see link:doc/modules/ROOT/pages/usage.adoc[Usage Guide].
 
 Choosing the wrong strategy can result in IP address spoofing security vulnerabilities.
+
+== Documentation
+
+* https://docs.outskirtslabs.com/ol.client-ip/0.1/[Docs]
+* https://docs.outskirtslabs.com/ol.client-ip/0.1/api[API Reference]
+* https://github.com/outskirtslabs/client-ip/issues[Support via GitHub Issues]
 
 == Recommended Reading
 
