@@ -3,13 +3,9 @@
 .clj-kondo/
 .lsp/
 .nrepl-port
-COST.md
 *.java
-PLAN.md
-TASK.md
+*.md
 archive/
-realclientip-go/
-rfc7239.txt
-src/user.clj
 target/
 .env
+example-project/
