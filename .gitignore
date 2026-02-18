@@ -12,3 +12,4 @@ realclientip-go/
 rfc7239.txt
 src/user.clj
 target/
+.env
