@@ -1,0 +1,18 @@
+{:manifest/version 1,
+ :project
+ {:id "ol.client-ip",
+  :coord "com.outskirtslabs/client-ip",
+  :description
+  "A 0-dependency ring middleware for determining a request's real client IP address from HTTP headers",
+  :license "MIT",
+  :platforms [:clj],
+  :status :stable,
+  :created "2026-02-16",
+  :version "0.1.1"},
+ :docs
+ {:component "ol.client-ip",
+  :title "ol.client-ip",
+  :version "next",
+  :prerelease true,
+  :start-path "doc"},
+ :repo {:url "https://github.com/outskirtslabs/client-ip"}}

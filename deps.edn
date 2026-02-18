@@ -9,4 +9,7 @@
            :neil   {:project {:name        com.outskirtslabs/client-ip
                               :license     {:id "MIT"}
                               :description "A 0-dependency ring middleware for determining a request's real client IP address from HTTP headers"
+                              :platforms   [:clj]
+                              :created     "2026-02-16"
+                              :status      :stable
                               :version     "0.1.1"}}}}
