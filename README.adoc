@@ -4,8 +4,8 @@ ____
 A 0-dependency ring middleware for determining a request's real client IP address from HTTP headers
 ____
 
-image:https://img.shields.io/badge/doc-outskirtslabs-orange.svg[doc,link=http://docs.outskirtslabs.com/ol.client-ip/0.1/]
-image:https://img.shields.io/badge/status-stable-brightgreen.svg[status: stable,link=http://docs.outskirtslabs.com/open-source-vital-signs#stable]
+image:https://img.shields.io/badge/doc-outskirtslabs-orange.svg[doc,link=https://docs.outskirtslabs.com/ol.client-ip/0.1/]
+image:https://img.shields.io/badge/status-stable-brightgreen.svg[status: stable,link=https://docs.outskirtslabs.com/open-source-vital-signs#stable]
 image:https://github.com/outskirtslabs/client-ip/actions/workflows/ci.yml/badge.svg[Build Status,link=https://github.com/outskirtslabs/client-ip/actions]
 image:https://img.shields.io/clojars/v/com.outskirtslabs/client-ip.svg[Clojars Project,link=https://clojars.org/com.outskirtslabs/client-ip]
 
