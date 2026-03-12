@@ -1,4 +1,4 @@
-= client-ip
+= ol.client-ip
 
 ____
 A 0-dependency ring middleware for determining a request's real client IP address from HTTP headers
