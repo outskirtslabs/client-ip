@@ -8,7 +8,8 @@
  :tasks          {:requires         ([babashka.fs :as fs]
                                      [clojure.string :as str]
                                      [babashka.tasks :refer [shell]]
-                                     [ol.bb-tasks.gen-docs :as gen-docs])
+                                     [ol.bb-tasks.gen-docs :as gen-docs]
+                                     [ol.bb-tasks.publish-clojars :as publish-clojars])
                   test              (apply clojure "-M:dev:kaocha" *command-line-args*)
                   deps-tree         (clojure "-X:deps tree :aliases '[:dev]'")
                   dev               {:doc "Start a local development server" :task (clojure "-M:dev:repl/dev")}
@@ -29,7 +30,7 @@
                                      :task             (shell "clojure -T:build clean")}
                   publish           {:doc     "Publish the clojure sdk libs to clojars"
                                      :depends [jar]
-                                     :task    (clojure "-T:build deploy")}
+                                     :task    (publish-clojars/publish!)}
                   ci                {:depends [test fmt.check lint]}
                   gen-docs          {:doc  "Generate all Antora documentation"
                                      :task (gen-docs/generate!)}}}
