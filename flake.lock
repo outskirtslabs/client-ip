@@ -1,10 +1,31 @@
 {
   "nodes": {
+    "clj-helpers": {
+      "inputs": {
+        "clojure-nix-locker": "clojure-nix-locker",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1781180565,
+        "narHash": "sha256-RkwmAp3FvQ3czih+WUYCF8TZE3viJyF8U6i3ekm8o+Q=",
+        "owner": "outskirtslabs",
+        "repo": "clojure-nix-locker-helpers",
+        "rev": "b72df887ae16d56c9d8e1a3d39b0242830011be6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "outskirtslabs",
+        "repo": "clojure-nix-locker-helpers",
+        "type": "github"
+      }
+    },
     "clojure-nix-locker": {
       "inputs": {
         "flake-utils": "flake-utils",
         "nixpkgs": [
-          "devenv",
+          "clj-helpers",
           "nixpkgs"
         ]
       },
@@ -24,7 +45,6 @@
     },
     "devenv": {
       "inputs": {
-        "clojure-nix-locker": "clojure-nix-locker",
         "devshell": "devshell",
         "flake-schemas": "flake-schemas",
         "flakelight": "flakelight",
@@ -35,11 +55,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1781168402,
-        "narHash": "sha256-n+DVw0Y2LIBmtF14euMnco7GliBWlcIThiyvX4mTS48=",
+        "lastModified": 1781182424,
+        "narHash": "sha256-3nwfJ96y0gpRkgimUiRUpY/R+T9qaY+0Cux/1CVLxjQ=",
         "owner": "ramblurr",
         "repo": "nix-devenv",
-        "rev": "3510b314b7350bbfd907441c99e6c8b05ffccdbb",
+        "rev": "58e5288a0a0600f980ea4758672c61cb51e2ad0a",
         "type": "github"
       },
       "original": {
@@ -191,6 +211,7 @@
     },
     "root": {
       "inputs": {
+        "clj-helpers": "clj-helpers",
         "devenv": "devenv",
         "devshell": "devshell_2",
         "nixpkgs": "nixpkgs_2"
