@@ -2,8 +2,8 @@
  :deps    {}
  :aliases {:kaocha {:extra-deps {lambdaisland/kaocha {:mvn/version "1.91.1392"}}
                     :main-opts  ["-m" "kaocha.runner"]}
-           :build  {:deps       {io.github.clojure/tools.build {:mvn/version "0.10.13"}
-                                 slipset/deps-deploy           {:mvn/version "0.2.2"}}
+           :build  {:deps       {io.github.clojure/tools.build {:mvn/version "0.10.14"}
+                                 slipset/deps-deploy           {:mvn/version "0.2.5"}}
                     :ns-default build}
            :neil   {:project {:name        com.outskirtslabs/client-ip
                               :url         "https://github.com/outskirtslabs/client-ip"
